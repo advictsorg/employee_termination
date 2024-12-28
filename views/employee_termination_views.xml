@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_terminations_kanban" model="ir.ui.view">
+        <field name="name">employee.termination.kanban</field>
+        <field name="model">employee.termination</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="job_position"/>
+                <field name="employee_contract"/>
+                <field name="start_date" readonly="1"/>
+                <field name="expected_revealing_date"/>
+                <field name="resignation_type"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click overflow-hidden">
+                            <div class="d-flex align-items-center">
+                                <div class="w-25 d-flex justify-content-center">
+                                    <field name="image_128" widget="image" options='{"preview_image": "image_128"}'/>
+                                </div>
+                                <div class="w-75 d-flex flex-column ms-3">
+                                    <h1 class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </h1>
+                                    <field name="state" widget="label_selection"
+                                           options="{'classes': {
+                                        'draft': 'default',
+                                        'submitted': 'default',
+
+                                        'init_manager': 'default',
+                                        'hr': 'default',
+                                        'manager_approval': 'default',
+                                        'it_approval': 'default',
+                                        'finance_approval': 'default',
+                                        'legal_approval': 'default',
+                                        'hr_employee_approval': 'default',
+                                        'rejected': 'warning',
+                                        'approved': 'success'}}"/>
+                                    <span class="text-muted">Name :
+                                        <field name="employee_id"/>
+                                    </span>
+                                    <span class="text-muted">Job Position :
+                                        <field name="job_position"/>
+                                    </span>
+                                    <span class="text-muted">Department :
+                                        <field name="department_id"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record id="termination_tree" model="ir.ui.view">
+        <field name="name">employee.termination.tree</field>
+        <field name="model">employee.termination</field>
+
+
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <tree string="Employee Resignation"
+                  decoration-danger="state == 'rejected'"
+                  decoration-success="state == 'approved'">
+                <field name="employee_id" widget="many2one_avatar"/>
+                <field name="department_id"/>
+                <field name="job_position"/>
+                <field name="employee_contract"/>
+                <field name="start_date" readonly="1"/>
+                <field name="create_uid" invisible="1"/>
+                <field name="expected_revealing_date"/>
+                <field name="resignation_type" widget="badge"
+                       decoration-warning="resignation_type == 'resigned'"
+                       decoration-danger="resignation_type == 'fired'"/>
+                <field name="state" decoration-warning="state == 'approved'"
+                       decoration-danger="state == 'rejected'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="termination_form" model="ir.ui.view">
+        <field name="name">employee.termination.form</field>
+        <field name="model">employee.termination</field>
+        <field name="arch" type="xml">
+            <form string="EOS" create="true">
+
+                <header>
+                    <field name="is_current_manager" invisible="1"/>
+                    <button string="Submit" type="object" name="ter_submitted" states='draft'
+                            class="oe_highlight"
+                            confirm="Are you sure to Submit the EOS?"
+
+                    />
+                    <button string="Initial Manager Approve" type="object" name="initial_manager_approved"
+                            class="oe_highlight"
+                            confirm="Are you sure to confirm the EOS?"
+                            attrs="{'invisible': ['|','|', ('resignation_type', '=', 'fired'), ('is_current_manager', '!=', True),('state', '!=', 'submitted')]}"
+                    />
+
+                    <button string="Manager Approve" type="object" name="action_approve"
+                            attrs="{'invisible': ['|','|',('resignation_type', '=', 'resigned'),('is_current_manager', '!=', True),('state', '!=', 'submitted')]}"
+                            class="oe_highlight"
+
+                    />
+                    <button string="Manager Approve" type="object" name="action_approve"
+                            class="oe_highlight"
+                            attrs="{'invisible': ['|',('is_current_manager', '!=', True),('state', '!=', 'hr')]}"
+                    />
+                    <button string="Initial HR Approve" type="object" name="action_approve" states='init_manager'
+                            class="oe_highlight"
+                            groups="employee_termination.ter_hr_employee_group , employee_termination.ter_admin_group"/>
+
+                    <button string="IT Approve" type="object" name="action_approve" states='manager_approval'
+                            class="oe_highlight"
+                            groups="employee_termination.ter_it_group , employee_termination.ter_admin_group"/>
+                    <button string="Finance Approve" type="object" name="action_approve" states='it_approval'
+                            class="oe_highlight"
+
+                            groups="employee_termination.ter_finance_group , employee_termination.ter_admin_group"/>
+                    <button string="Legal Approve" type="object" name="action_approve" states='finance_approval'
+                            class="oe_highlight"
+                            groups="employee_termination.ter_law_group , employee_termination.ter_admin_group"
+
+                    />
+                    <button string="Hr Employee Approve" type="object" name="action_approve" states='legal_approval'
+                            class="oe_highlight"
+                            groups="employee_termination.ter_hr_employee_group , employee_termination.ter_admin_group"
+
+                    />
+                    <button string="Approve EOS" type="object" name="action_approve" states='hr_employee_approval'
+                            class="oe_highlight"
+                            groups="employee_termination.ter_hr_group , employee_termination.ter_admin_group"
+
+                    />
+                    <button string="Reject" type="object"
+                            states='submitted,init_manager,hr,legal_approval,hr_employee_approval'
+                            class="btn-secondary"
+                            name='action_reject'
+                            groups="employee_termination.ter_admin_group ,
+                                    employee_termination.ter_hr_group ,
+                                    employee_termination.ter_hr_employee_group,
+                                    employee_termination.ter_manager_group"
+                    />
+                    <button string="Print" type="object" name="action_print_report"
+                            class="oe_link"
+                            confirm="Are you sure to Print The EOS?"
+                            states="approved"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    <!--                    <field name="state" widget="statusbar"/>-->
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <field name="image_128" widget="image" options='{"preview_image": "image_128"}'/>
+                    </div>
+
+                    <group>
+                        <group string="Employee Details">
+                            <field name="resignation_type" string="Type" states='draft'
+                                   groups="employee_termination.ter_hr_group , employee_termination.ter_admin_group, employee_termination.ter_hr_employee_group"/>
+                            <field name="resignation_type" invisible="1"/>
+                            <field name="read_only" invisible="1"/>
+                            <field name="employee_id" attrs="{'readonly': [('employee_id_readonly', '=', True)]}"/>
+                            <field name="employee_id_readonly" invisible="1"/>
+                            <field name="end_date_readonly" invisible="1"/>
+                            <field name="create_uid" invisible="1"/>
+                            <field name="department_id"/>
+                            <field name="job_position"/>
+                            <field name="manager_id"/>
+                            <field name="employee_contract"/>
+
+                        </group>
+                        <group string="Dates">
+                            <field name="start_date" readonly="1" force_save="1"/>
+                            <field name="expected_revealing_date"
+                                   attrs="{'readonly': [('end_date_readonly', '=', True)]}"/>
+                        </group>
+                        <group string="Reasons"
+                        >
+                            <field name="reason"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="resigned" invisible="1"/>
+                            <field name="initial_hr_approved_reason"
+                                   readonly="1"
+                                   attrs="{'invisible': ['|',('resigned', '=', False),
+                                   ('state','not in',['hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected'])]}"
+
+
+                            />
+                            <field name="manager_approved_reason"
+                                   readonly="1"
+                                   attrs="{'invisible': [('manager_approved_reason', '=', False)]}"
+                                   states="manager_approval,it_approval,finance_approval,legal_approval,approved,rejected"
+                            />
+                            <field name="it_approved_reason"
+                                   readonly="1"
+                                   attrs="{'invisible': [('it_approved_reason', '=', False)]}"
+                                   states="it_approval,finance_approval,legal_approval,approved,rejected"
+                            />
+                            <field name="finance_approved_reason"
+                                   readonly="1"
+                                   attrs="{'invisible': [('finance_approved_reason', '=', False)]}"
+                                   states="finance_approval,legal_approval,approved,rejected"
+                            />
+                            <field name="legal_approved_reason"
+                                   readonly="1"
+                                   attrs="{'invisible': [('legal_approved_reason', '=', False)]}"
+                                   states="legal_approval,approved,rejected"
+                            />
+                            <field name="hr_employee_approved_reason"
+                                   readonly="1"
+                                   attrs="{'invisible': [('legal_approved_reason', '=', False)]}"
+                                   states="hr_employee_approval,approved,rejected"
+                            />
+                            <field name="hr_approved_reason"
+                                   readonly="1"
+                                   attrs="{'invisible': [('hr_approved_reason', '=', False)]}"
+                                   states="approved,rejected"
+                            />
+                            <field name="reject_reason"
+                                   readonly="1"
+                                   attrs="{'invisible': [('reject_reason', '=', False)]}"
+                                   states="rejected"
+                            />
+
+                        </group>
+                        <group string="Approvals and dates"
+                               states="submitted,hr,manager_approval,it_approval,finance_approval,legal_approval,approved,rejected">
+                            <field name="submitted_date"
+                                   readonly="1"
+                                   states="submitted,init_manager,hr,manager_approval,it_approval,finance_approval,legal_approval,approved,rejected"
+                            />
+                            <field name="submitted_by" widget="many2one_avatar"
+                                   readonly="1"
+                                   states="submitted,init_manager,hr,manager_approval,it_approval,finance_approval,legal_approval,approved,rejected"
+                            />
+                            <field name="approved_initial_manager_date"
+                                   readonly="1"
+                                   attrs="{'invisible': ['|',('resigned', '=', False),
+                                   ('state','not in',['init_manager','hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected'])]}"
+
+                            />
+                            <field name="approved_initial_manager_by" widget="many2one_avatar"
+                                   readonly="1"
+                                   attrs="{'invisible': ['|',('resigned', '=', False),
+                                   ('state','not in',['init_manager','hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected'])]}"
+
+                            />
+                            <field name="approved_initial_hr_date"
+                                   readonly="1"
+                                   attrs="{'invisible': ['|',('resigned', '=', False),
+                                   ('state','not in',['hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected'])]}"
+
+                            />
+                            <field name="approved_initial_hr_by" widget="many2one_avatar"
+                                   readonly="1"
+                                   attrs="{'invisible': ['|',('resigned', '=', False),
+                                   ('state','not in',['hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected'])]}"
+
+                            />
+
+                            <field name="approved_manager_date"
+                                   readonly="1"
+                                   states="manager_approval,it_approval,finance_approval,legal_approval,approved,rejected"
+                            />
+                            <field name="approved_manager_by" widget="many2one_avatar"
+                                   readonly="1"
+                                   states="manager_approval,it_approval,finance_approval,legal_approval,approved,rejected"
+                            />
+
+                            <field name="approved_it_date"
+                                   readonly="1"
+                                   states="it_approval,finance_approval,legal_approval,approved,rejected"
+                            />
+                            <field name="approved_it_by" widget="many2one_avatar"
+                                   readonly="1"
+                                   states="it_approval,finance_approval,legal_approval,approved,rejected"
+                            />
+
+                            <field name="approved_finance_date"
+                                   readonly="1"
+                                   states="finance_approval,legal_approval,approved,rejected"
+                            />
+                            <field name="approved_finance_by" widget="many2one_avatar"
+                                   readonly="1"
+                                   states="finance_approval,legal_approval,approved,rejected"
+                            />
+
+                            <field name="approved_law_date"
+                                   readonly="1"
+                                   states="legal_approval,approved,rejected"
+                            />
+                            <field name="approved_law_by" widget="many2one_avatar"
+                                   readonly="1"
+                                   states="legal_approval,approved,rejected"
+                            />
+
+                            <field name="approved_hr_employee_date"
+                                   readonly="1"
+                                   states="hr_employee,approved,rejected"
+                            />
+                            <field name="approved_hr_employee_by" widget="many2one_avatar"
+                                   readonly="1"
+                                   states="hr_employee_approval,approved,rejected"
+                            />
+
+                            <field name="approved_hr_date"
+                                   readonly="1"
+                                   states="approved,rejected"
+                            />
+                            <field name="approved_hr_by" widget="many2one_avatar"
+                                   readonly="1"
+                                   states="approved,rejected"
+                            />
+                        </group>
+
+                    </group>
+                    <notebook>
+                        <page name="employee_payslips" string="Payslips"
+                              groups="employee_termination.ter_hr_group ,employee_termination.ter_law_group , employee_termination.ter_admin_group,employee_termination.ter_finance_group">
+                            <field name="payslip_ids">
+                                <tree string="Payslips" create="false" edit="false" delete="false">
+                                    <field name="number"/>
+                                    <field name="net_wage"/>
+                                    <field name="basic_wage"/>
+                                    <field name="payslip_run_id"/>
+                                    <field name="state"/>
+
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="employee_equipments" string="Equipments"
+                              groups="employee_termination.ter_hr_group,employee_termination.ter_law_group , employee_termination.ter_admin_group,employee_termination.ter_it_group">
+                            <field name="equipment_ids">
+                                <tree string="Equipments" create="false" edit="false" delete="false">
+                                    <field name="name"/>
+                                    <field name="assign_date"/>
+                                    <field name="cost"/>
+                                    <field name="effective_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+                <div class="o_attachment_preview" attrs="{'invisible': []}"/>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="action_termination" model="ir.actions.act_window">
+        <field name="name">EOS</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">employee.termination</field>
+        <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
+        <field name="domain"></field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first EOS</p>
+            <p>Process Stages to End Of Services</p>
+        </field>
+        <field name="context">{'filter_by_user': True}</field>
+    </record>
+
+
+    <menuitem id="termination_root" name="EOS"
+              groups="base.group_user"
+              sequence="1"
+              web_icon="employee_termination,static/description/icon.png"/>
+    <menuitem id="termination_branch" name="EOS" parent="termination_root"
+              action="action_termination" sequence="2"/>
+
+
+</odoo>

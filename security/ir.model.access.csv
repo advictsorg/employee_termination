@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_employee_termination,Employee Termination,model_employee_termination,base.group_user,1,1,1,0
+admin_termination,Employee Termination,model_employee_termination,employee_termination.ter_admin_group,1,1,1,1
+access_reject_termination_wizard,reject.termination.wizard,model_reject_termination_wizard,,1,1,1,1
+access_approve_termination_wizard,approve.termination.wizard,model_approve_termination_wizard,,1,1,1,1

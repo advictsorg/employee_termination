@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="manager_approval">
+            <field name="name">Manager Approved</field>
+            <field name="res_model">employee.termination</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'manager_approval')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Manager Approved</p>
+            </field>
+        </record>
+
+        <menuitem id="menu_manager_approval" name="Manager Approval"
+                  parent="termination_root"
+                  action="manager_approval"
+                  sequence="3"
+                  />
+
+
+        <!-- Define the Action menu item for It Approval -->
+        <record model="ir.actions.act_window" id="it_approval">
+            <field name="name">IT Approved</field>
+            <field name="res_model">employee.termination</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'it_approval')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">IT Approved</p>
+            </field>
+        </record>
+
+        <menuitem id="menu_it_approval" name="IT Approved"
+                  parent="termination_root"
+                  action="it_approval"
+                  sequence="4"
+                  />
+
+
+        <!-- Define the Action menu item for finance Approval -->
+        <record model="ir.actions.act_window" id="finance_approval">
+            <field name="name">Finance Approved</field>
+            <field name="res_model">employee.termination</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'finance_approval')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Finance Approved</p>
+            </field>
+        </record>
+
+        <menuitem id="menu_finance_approval" name="finance Approved"
+                  parent="termination_root"
+                  action="finance_approval"
+                  sequence="5"
+                  />
+
+
+        <!-- Define the Action menu item for Legal Approval -->
+        <record model="ir.actions.act_window" id="legal_approval">
+            <field name="name">Legal Approved</field>
+            <field name="res_model">employee.termination</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'legal_approval')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Legal Approved</p>
+            </field>
+        </record>
+
+        <menuitem id="menu_legal_approval" name="Legal Approved"
+                  parent="termination_root"
+                  action="legal_approval"
+                  sequence="6"
+                  />
+
+
+        <!-- Define the Action menu item for approved -->
+        <record model="ir.actions.act_window" id="approved">
+            <field name="name">Approved</field>
+            <field name="res_model">employee.termination</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'approved')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Approved</p>
+            </field>
+        </record>
+
+        <menuitem id="menu_approved" name="Approved"
+                  parent="termination_root"
+                  action="approved"
+                  sequence="7"
+                  />
+
+
+        <!-- Define the Action menu item for rejected -->
+        <record model="ir.actions.act_window" id="rejected">
+            <field name="name">Rejected</field>
+            <field name="res_model">employee.termination</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'rejected')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Rejected</p>
+            </field>
+        </record>
+
+        <menuitem id="menu_rejected" name="Rejected"
+                  parent="termination_root"
+                  action="rejected"
+                  sequence="8"
+                  />
+    </data>
+</odoo>
+
+

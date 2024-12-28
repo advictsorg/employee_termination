@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_reject_termination_wizard">
+            <field name="name">reject.termination.wizard.form</field>
+            <field name="model">reject.termination.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Reject Comment">
+                    <group>
+                        <field name="reason" string="Reason for Rejection" />
+
+                    </group>
+                    <footer>
+                        <button string="Confirm" confirm="Are you sure to Reject the EOS?"  name="action_confirm"  type="object" class="btn-primary" />
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

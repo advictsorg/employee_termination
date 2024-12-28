@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="employee_termination_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <style>
+                            th {
+                            background-color: #937c73;
+                            color: white;
+                            }
+                            @font-face {
+                            font-family: 'Tajawal'
+                            src: url('/fonts/Tajawal-Bold.ttf') format('truetype');
+                            }
+                            .last-table {
+                            margin-bottom: -10px; /* Pull the last table closer */
+                            }
+
+                            @font-face {
+                            font-family: 'Bahij';
+                            src: url('/employee_termination/static/src/fonts/Bahij TheSansArabic-Plain.ttf')
+                            format('truetype');
+
+                            }
+                        </style>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col" colspan="2" style="font-family: 'Bahij';">بيان موقف
+                                        موظف
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="width: 50%;font-family: 'Bahij';">Name:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.employee_id.name"/>
+                                        <br/>الاسم
+                                    </td>
+                                    <td style="width: 50%;font-family: 'Bahij';">Date of Leave:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_revealing_date"/>
+                                        <br/>
+                                        تاريخ المغادرة
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;font-family: 'Bahij';">Job Title:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.job_position.name"/>
+                                        <br/>العنوان
+                                        الوظيفي
+                                    </td>
+                                    <td style="width: 50%;font-family: 'Bahij';">Department:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.department_id.name"/>
+                                        <br/>
+                                        القسم
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="left-align" style="font-family: 'Bahij';">
+                                        Employee Manager
+
+                                    </th>
+                                    <th scope="col" class="right-align" style="font-family: 'Bahij';">
+                                        المدير المباشر
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2"
+                                        style="width: 50%; font-family: 'Bahij';">
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.manager_approved_reason"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;font-family: 'Bahij';">Date:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_manager_date"/>
+                                        <br/>التاريخ
+                                    </td>
+                                    <td style="width: 50%;font-family: 'Bahij';">Signature:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_manager_by"/>
+                                        <br/>
+                                        التوقيع
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="left-align" style="font-family: 'Bahij';">
+                                        IT Department
+
+                                    </th>
+                                    <th scope="col" class="right-align" style="font-family: 'Bahij';">
+                                        قسم نظم المعلومات -القسم المانح
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2"
+                                        style="width: 50%; font-family: 'Bahij';">
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.it_approved_reason"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;font-family: 'Bahij';">Date:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_it_date"/>
+                                        <br/>التاريخ
+                                    </td>
+                                    <td style="width: 50%;font-family: 'Bahij';">Signature:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_it_by"/>
+                                        <br/>
+                                        التوقيع
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="left-align" style="font-family: 'Bahij';">
+                                        Finance Department
+
+                                    </th>
+                                    <th scope="col" class="right-align" style="font-family: 'Bahij';">
+                                        القسم المالي
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2"
+                                        style="width: 50%; font-family: 'Bahij';">
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.finance_approved_reason"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;font-family: 'Bahij';">Date:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_finance_date"/>
+                                        <br/>التاريخ
+                                    </td>
+                                    <td style="width: 50%;font-family: 'Bahij';">Signature:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_finance_by"/>
+                                        <br/>
+                                        التوقيع
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="left-align" style="font-family: 'Bahij';">
+                                        Legal Department
+
+                                    </th>
+                                    <th scope="col" class="right-align" style="font-family: 'Bahij';">
+                                        القسم القانوني
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2"
+                                        style="width: 50%; font-family: 'Bahij';">
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.legal_approved_reason"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;font-family: 'Bahij';">Date:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_law_date"/>
+                                        <br/>التاريخ
+                                    </td>
+                                    <td style="width: 50%;font-family: 'Bahij';">Signature:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_law_by"/>
+                                        <br/>
+                                        التوقيع
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="left-align" style="font-family: 'Bahij';">
+                                        Human Resources Department
+
+                                    </th>
+                                    <th scope="col" class="right-align" style="font-family: 'Bahij';">
+                                        قسم الموارد البشرية
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2"
+                                        style="width: 50%; font-family: 'Bahij';">
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.initial_hr_approved_reason"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;font-family: 'Bahij';">Date:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_initial_hr_date"/>
+                                        <br/>التاريخ
+                                    </td>
+                                    <td style="width: 50%;font-family: 'Bahij';">Signature:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_initial_hr_by"/>
+                                        <br/>
+                                        التوقيع
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered last-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="left-align" style="font-family: 'Bahij';">
+                                        Human Resources Manager
+
+                                    </th>
+                                    <th scope="col" class="right-align" style="font-family: 'Bahij';">
+                                        مدير قسم الموارد البشرية
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2"
+                                        style="width: 50%; font-family: 'Bahij';">
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.hr_approved_reason"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;font-family: 'Bahij';">Date:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_hr_date"/>
+                                        <br/>التاريخ
+                                    </td>
+                                    <td style="width: 50%;font-family: 'Bahij';">Signature:
+                                        <span style="font-family: 'Bahij'; margin-left:5px"
+                                              t-field="doc.approved_hr_by"/>
+                                        <br/>
+                                        التوقيع
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="employee_termination_report_temp" model="ir.actions.report">
+        <field name="name">Termination Card</field>
+        <field name="model">employee.termination</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">employee_termination.employee_termination_report_template</field>
+        <field name="report_file">employee_termination.employee_termination_report_template</field>
+        <field name="print_report_name">'EOS - '+(object.employee_id.name)</field>
+        <field name="attachment">((object.name or 'EOS').replace('/','_')+'.pdf')</field>
+        <field name="binding_model_id"/>
+
+        <field name="binding_type">report</field>
+
+    </record>
+
+</odoo>

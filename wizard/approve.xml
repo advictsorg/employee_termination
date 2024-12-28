@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_approve_termination_wizard">
+            <field name="name">approve.termination.wizard.form</field>
+            <field name="model">approve.termination.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Approve Comment">
+                    <p class="oe_grey"><field readonly="1" name="message_label"/></p>
+                    <group>
+                        <field name="reason" string="Reason for Approve" />
+                    </group>
+                    <footer>
+                        <button string="Confirm" confirm="Are you sure to approve the EOS?"  name="action_confirm"  type="object" class="btn-primary" />
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

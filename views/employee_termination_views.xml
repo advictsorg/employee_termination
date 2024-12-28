@@ -91,7 +91,8 @@
 
                 <header>
                     <field name="is_current_manager" invisible="1"/>
-                    <button string="Submit" type="object" name="ter_submitted" states='draft'
+                    <button string="Submit" type="object" name="ter_submitted"
+                            invisible="state != 'draft'"
                             class="oe_highlight"
                             confirm="Are you sure to Submit the EOS?"
 
@@ -99,46 +100,46 @@
                     <button string="Initial Manager Approve" type="object" name="initial_manager_approved"
                             class="oe_highlight"
                             confirm="Are you sure to confirm the EOS?"
-                            attrs="{'invisible': ['|','|', ('resignation_type', '=', 'fired'), ('is_current_manager', '!=', True),('state', '!=', 'submitted')]}"
+                            invisible="resignation_type == 'fired' or is_current_manager != True or state != 'submitted'"
                     />
 
                     <button string="Manager Approve" type="object" name="action_approve"
-                            attrs="{'invisible': ['|','|',('resignation_type', '=', 'resigned'),('is_current_manager', '!=', True),('state', '!=', 'submitted')]}"
+                            invisible="resignation_type == 'resigned' or is_current_manager != True or state != 'submitted'"
                             class="oe_highlight"
 
                     />
                     <button string="Manager Approve" type="object" name="action_approve"
                             class="oe_highlight"
-                            attrs="{'invisible': ['|',('is_current_manager', '!=', True),('state', '!=', 'hr')]}"
+                            invisible="is_current_manager != True or is_current_manager != True or state != 'hr'"
                     />
-                    <button string="Initial HR Approve" type="object" name="action_approve" states='init_manager'
+                    <button string="Initial HR Approve" type="object" name="action_approve" invisible="state != 'init_manager'"
                             class="oe_highlight"
                             groups="employee_termination.ter_hr_employee_group , employee_termination.ter_admin_group"/>
 
-                    <button string="IT Approve" type="object" name="action_approve" states='manager_approval'
+                    <button string="IT Approve" type="object" name="action_approve"  invisible="state != 'manager_approval'"
                             class="oe_highlight"
                             groups="employee_termination.ter_it_group , employee_termination.ter_admin_group"/>
-                    <button string="Finance Approve" type="object" name="action_approve" states='it_approval'
+                    <button string="Finance Approve" type="object" name="action_approve" invisible="state != 'it_approval'"
                             class="oe_highlight"
 
                             groups="employee_termination.ter_finance_group , employee_termination.ter_admin_group"/>
-                    <button string="Legal Approve" type="object" name="action_approve" states='finance_approval'
+                    <button string="Legal Approve" type="object" name="action_approve" invisible="state != 'finance_approval'"
                             class="oe_highlight"
                             groups="employee_termination.ter_law_group , employee_termination.ter_admin_group"
 
                     />
-                    <button string="Hr Employee Approve" type="object" name="action_approve" states='legal_approval'
+                    <button string="Hr Employee Approve" type="object" name="action_approve" invisible="state != 'legal_approval'"
                             class="oe_highlight"
                             groups="employee_termination.ter_hr_employee_group , employee_termination.ter_admin_group"
 
                     />
-                    <button string="Approve EOS" type="object" name="action_approve" states='hr_employee_approval'
+                    <button string="Approve EOS" type="object" name="action_approve"  invisible="state != 'hr_employee_approval'"
                             class="oe_highlight"
                             groups="employee_termination.ter_hr_group , employee_termination.ter_admin_group"
 
                     />
                     <button string="Reject" type="object"
-                            states='submitted,init_manager,hr,legal_approval,hr_employee_approval'
+                            invisible="state not in ['submitted','init_manager','hr','legal_approval','hr_employee_approval']"
                             class="btn-secondary"
                             name='action_reject'
                             groups="employee_termination.ter_admin_group ,
@@ -149,7 +150,7 @@
                     <button string="Print" type="object" name="action_print_report"
                             class="oe_link"
                             confirm="Are you sure to Print The EOS?"
-                            states="approved"
+                            invisible="state != 'approved'"
                     />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                     <!--                    <field name="state" widget="statusbar"/>-->
@@ -164,11 +165,14 @@
 
                     <group>
                         <group string="Employee Details">
-                            <field name="resignation_type" string="Type" states='draft'
+                            <field name="resignation_type" string="Type"
+                                   invisible="state != 'draft'"
                                    groups="employee_termination.ter_hr_group , employee_termination.ter_admin_group, employee_termination.ter_hr_employee_group"/>
                             <field name="resignation_type" invisible="1"/>
                             <field name="read_only" invisible="1"/>
-                            <field name="employee_id" attrs="{'readonly': [('employee_id_readonly', '=', True)]}"/>
+                            <field name="employee_id"
+                                   readonly="employee_id_readonly == True"
+                            />
                             <field name="employee_id_readonly" invisible="1"/>
                             <field name="end_date_readonly" invisible="1"/>
                             <field name="create_uid" invisible="1"/>
@@ -181,144 +185,136 @@
                         <group string="Dates">
                             <field name="start_date" readonly="1" force_save="1"/>
                             <field name="expected_revealing_date"
-                                   attrs="{'readonly': [('end_date_readonly', '=', True)]}"/>
+
+                                   readonly="end_date_readonly == True"
+                            />
                         </group>
                         <group string="Reasons"
                         >
                             <field name="reason"
-                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+
+                                   readonly="state != 'draft'"
+                            />
                             <field name="resigned" invisible="1"/>
                             <field name="initial_hr_approved_reason"
                                    readonly="1"
-                                   attrs="{'invisible': ['|',('resigned', '=', False),
-                                   ('state','not in',['hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected'])]}"
+                                   invisible="resigned == False or state not in ['hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected']"
 
 
                             />
                             <field name="manager_approved_reason"
                                    readonly="1"
-                                   attrs="{'invisible': [('manager_approved_reason', '=', False)]}"
-                                   states="manager_approval,it_approval,finance_approval,legal_approval,approved,rejected"
+                                   invisible="manager_approved_reason == False or state not in ['manager_approval','it_approval','finance_approval','legal_approval','approved','rejected']"
+
                             />
                             <field name="it_approved_reason"
                                    readonly="1"
-                                   attrs="{'invisible': [('it_approved_reason', '=', False)]}"
-                                   states="it_approval,finance_approval,legal_approval,approved,rejected"
+                                   invisible="it_approved_reason == False or state not in ['it_approval','finance_approval','legal_approval','approved','rejected']"
                             />
                             <field name="finance_approved_reason"
                                    readonly="1"
-                                   attrs="{'invisible': [('finance_approved_reason', '=', False)]}"
-                                   states="finance_approval,legal_approval,approved,rejected"
+                                   invisible="finance_approved_reason == False or state not in ['finance_approval','legal_approval','approved','rejected']"
                             />
                             <field name="legal_approved_reason"
                                    readonly="1"
-                                   attrs="{'invisible': [('legal_approved_reason', '=', False)]}"
-                                   states="legal_approval,approved,rejected"
+                                   invisible="legal_approved_reason == False or state not in ['legal_approval','approved','rejected']"
                             />
                             <field name="hr_employee_approved_reason"
                                    readonly="1"
-                                   attrs="{'invisible': [('legal_approved_reason', '=', False)]}"
-                                   states="hr_employee_approval,approved,rejected"
+                                   invisible="hr_employee_approved_reason == False or state not in ['hr_employee_approval','approved','rejected']"
                             />
                             <field name="hr_approved_reason"
                                    readonly="1"
-                                   attrs="{'invisible': [('hr_approved_reason', '=', False)]}"
-                                   states="approved,rejected"
+                                   invisible="hr_approved_reason == False or state not in ['approved','rejected']"
                             />
                             <field name="reject_reason"
                                    readonly="1"
-                                   attrs="{'invisible': [('reject_reason', '=', False)]}"
-                                   states="rejected"
+                                   invisible="reject_reason == False or state not in ['rejected']"
                             />
 
                         </group>
                         <group string="Approvals and dates"
-                               states="submitted,hr,manager_approval,it_approval,finance_approval,legal_approval,approved,rejected">
+
+                                invisible="state not in ['submitted','manager_approval','it_approval','finance_approval','hr','legal_approval','approved','rejected']"
+                        >
                             <field name="submitted_date"
                                    readonly="1"
-                                   states="submitted,init_manager,hr,manager_approval,it_approval,finance_approval,legal_approval,approved,rejected"
+                                   invisible="state not in ['submitted','init_manager','manager_approval','it_approval','finance_approval','hr','legal_approval','approved','rejected']"
                             />
                             <field name="submitted_by" widget="many2one_avatar"
                                    readonly="1"
-                                   states="submitted,init_manager,hr,manager_approval,it_approval,finance_approval,legal_approval,approved,rejected"
+                                   invisible="state not in ['submitted','init_manager','manager_approval','it_approval','finance_approval','hr','legal_approval','approved','rejected']"
                             />
                             <field name="approved_initial_manager_date"
                                    readonly="1"
-                                   attrs="{'invisible': ['|',('resigned', '=', False),
-                                   ('state','not in',['init_manager','hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected'])]}"
-
+                                   invisible="resigned == False or state not in ['init_manager','hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected']"
                             />
                             <field name="approved_initial_manager_by" widget="many2one_avatar"
                                    readonly="1"
-                                   attrs="{'invisible': ['|',('resigned', '=', False),
-                                   ('state','not in',['init_manager','hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected'])]}"
-
+                                   invisible="resigned == False or state not in ['init_manager','hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected']"
                             />
                             <field name="approved_initial_hr_date"
                                    readonly="1"
-                                   attrs="{'invisible': ['|',('resigned', '=', False),
-                                   ('state','not in',['hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected'])]}"
-
+                                    invisible="resigned == False or state not in ['hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected']"
                             />
                             <field name="approved_initial_hr_by" widget="many2one_avatar"
                                    readonly="1"
-                                   attrs="{'invisible': ['|',('resigned', '=', False),
-                                   ('state','not in',['hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected'])]}"
-
+                                    invisible="resigned == False or state not in ['init_manager','hr','manager_approval','it_approval','finance_approval','legal_approval','approved','rejected']"
                             />
 
                             <field name="approved_manager_date"
                                    readonly="1"
-                                   states="manager_approval,it_approval,finance_approval,legal_approval,approved,rejected"
+                                   invisible="state not in ['manager_approval','it_approval','finance_approval','legal_approval','approved','rejected']"
                             />
                             <field name="approved_manager_by" widget="many2one_avatar"
                                    readonly="1"
-                                   states="manager_approval,it_approval,finance_approval,legal_approval,approved,rejected"
+                                   invisible="state not in ['manager_approval','it_approval','finance_approval','legal_approval','approved','rejected']"
                             />
 
                             <field name="approved_it_date"
                                    readonly="1"
-                                   states="it_approval,finance_approval,legal_approval,approved,rejected"
+                                   invisible="state not in ['it_approval','finance_approval','legal_approval','approved','rejected']"
                             />
                             <field name="approved_it_by" widget="many2one_avatar"
                                    readonly="1"
-                                   states="it_approval,finance_approval,legal_approval,approved,rejected"
+                                   invisible="state not in ['it_approval','finance_approval','legal_approval','approved','rejected']"
                             />
 
                             <field name="approved_finance_date"
                                    readonly="1"
-                                   states="finance_approval,legal_approval,approved,rejected"
+
+                                   invisible="state not in ['finance_approval','legal_approval','approved','rejected']"
                             />
                             <field name="approved_finance_by" widget="many2one_avatar"
                                    readonly="1"
-                                   states="finance_approval,legal_approval,approved,rejected"
+                                   invisible="state not in ['finance_approval','legal_approval','approved','rejected']"
                             />
 
                             <field name="approved_law_date"
                                    readonly="1"
-                                   states="legal_approval,approved,rejected"
+                                   invisible="state not in ['legal_approval','approved','rejected']"
                             />
                             <field name="approved_law_by" widget="many2one_avatar"
                                    readonly="1"
-                                   states="legal_approval,approved,rejected"
+                                   invisible="state not in ['legal_approval','approved','rejected']"
                             />
 
                             <field name="approved_hr_employee_date"
                                    readonly="1"
-                                   states="hr_employee,approved,rejected"
+                                   invisible="state not in ['hr_employee','approved','rejected']"
                             />
                             <field name="approved_hr_employee_by" widget="many2one_avatar"
                                    readonly="1"
-                                   states="hr_employee_approval,approved,rejected"
+                                   invisible="state not in ['hr_employee_approval','approved','rejected']"
                             />
 
                             <field name="approved_hr_date"
                                    readonly="1"
-                                   states="approved,rejected"
+                                   invisible="state not in ['approved','rejected']"
                             />
                             <field name="approved_hr_by" widget="many2one_avatar"
                                    readonly="1"
-                                   states="approved,rejected"
+                                   invisible="state not in ['approved','rejected']"
                             />
                         </group>
 
@@ -351,7 +347,7 @@
                     </notebook>
 
                 </sheet>
-                <div class="o_attachment_preview" attrs="{'invisible': []}"/>
+                <div class="o_attachment_preview" invisible="1"/>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" groups="base.group_user"/>
                     <field name="activity_ids"/>
